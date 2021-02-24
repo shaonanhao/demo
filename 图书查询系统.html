@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>图书检索系统</title>
+		<link href="style/style.css" rel="stylesheet">
+	</head>
+	<body background="fangge.png">
+		<div class="main">
+		<div id="logo">
+			图书检索系统
+		</div>
+		
+		<div id="search">
+			<input type="text" id="key" name="key" placeholder="关键词" />
+			<input type="button" id="start" name="start" value="搜索" />
+		</div>
+		
+		<div id="placetable">
+			<table id="table">
+				<tr>
+					<th>名称</th>
+					<th>价格</th>
+					<th>出版</th>
+					<th>数量</th>
+				</tr>
+				<tbody id="emptybody">
+					
+				</tbody>
+			</table>
+		</div>
+		
+		<div id="change" >
+			<input type="button" id="prev" value="上一页" />	
+			<span id="pages"></span>
+			<input type="button" id="next" value="下一页" />
+		</div>
+	</div>
+		<script type="text/javascript">
+			//在此处用JSON输入书本的各项数据
+			var books = [
+			{"bname":"高等数学","sprice":"12","spbs":"高等数学出版社","sumber":"10","keywd":"数学"},
+			{"bname":"线性代数","sprice":"10","spbs":"线性代数出版社","sumber":"20","keywd":"数学"},
+			{"bname":"概率统计","sprice":"11","spbs":"概率统计出版社","sumber":"30","keywd":"数学"},
+			{"bname":"数学分析","sprice":"10.5","spbs":"高等数学出版社","sumber":"11","keywd":"数学"},
+			{"bname":"英语学习","sprice":"9.5","spbs":"外国语出版社","sumber":"5","keywd":"英语"},
+			{"bname":"英语口语","sprice":"12","spbs":"英语练习出版社","sumber":"12","keywd":"英语"},
+			{"bname":"长难句学习","sprice":"15","spbs":"外语写作出版社","sumber":"18","keywd":"英语"},
+			{"bname":"考研政治","sprice":"9.8","spbs":"中国人民出版社","sumber":"13","keywd":"政治"},
+			{"bname":"考研历史","sprice":"13.5","spbs":"清华大学出版社","sumber":"0","keywd":"政治"},
+			];
+			
+			function searchByKeywords(keywords, searchArr) {
+				const keywordsExp = new RegExp(".*?" + keywords + ".*?", "img");
+				return searchArr.filter(v => (keywordsExp.test(v.bname) || keywordsExp.test(v.sprice) ||keywordsExp.test(v.spbs) ||keywordsExp.test(v.sumber) || keywordsExp.test(v.keywd)));
+			}
+			var resultstring = JSON.stringify(searchByKeywords("", books));
+			var result = JSON.parse(resultstring)
+			
+			
+			var num1 = 4//每页设定为4本书
+			var num2//每页实际显示的书数量
+			var page = 1//默认为第一页
+			
+			//判断当前页码的书本数量
+			function changePages(result){
+				var html = "";
+				if(result.length - num1 *(page - 1) >= 4){
+					num2 = 4;
+				}
+				else{
+					num2 = result.length - num1 *(page - 1);
+				}
+				 for (var i = num1 * (page - 1); i < num2 + num1 * (page - 1); i++) {
+				 	html += "<tr>";
+				 	html += "<td>"+result[i].bname+"</td>";
+				 	html += "<td>"+result[i].sprice+"</td>";
+				 	html += "<td>"+result[i].spbs+"</td>";
+				 	html += "<td>"+result[i].sumber+"</td>";
+				 	html += "</tr>";
+				 }
+				 document.getElementById("emptybody").innerHTML = html;
+			}
+			
+			
+			window.onload = function(){
+				document.getElementById("start").onclick = function(){
+					var schkey = document.getElementById("key").value;
+					var resultstring = JSON.stringify(searchByKeywords(schkey, books));
+					var result = JSON.parse(resultstring);
+					 prev.onclick = function () {
+            	if (page > 1) {
+	               	 page--;
+	              	 changePages(result);
+	            } else {
+	                alert('当前为第一页！')
+	        		 }
+        	}
+			  next.onclick = function () {
+		            if (page < Math.ceil(result.length/4)) {
+		                page++;
+		                changePages(result);
+		            } else {
+		                alert('当前为最后一页！')
+		            }
+        		}
+					changePages(result);
+				}
+			}
+			
+			
+		</script>
+		
+	</body>
+</html>
