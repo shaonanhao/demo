@@ -1,0 +1,42 @@
+.logo{
+    letter-spacing: 5px;
+     position: absolute;
+     top: 10%; left: 42% ;
+     font-weight: 300;
+     font-size: 30px
+}
+.search{
+    position: absolute;
+    top: 20%;
+    left: 42%;
+}
+.placetable{
+    position: absolute;
+    
+    width: 80%;
+    top: 25%;
+    bottom: 10%;
+    left: 0;
+    right: 0;
+    margin:auto;
+
+}
+#table{
+    width: 90%;
+    margin: auto;
+}
+ th{
+    height: 90px;
+    width: 20%;
+    border: 1px solid black;
+}
+ td{
+    height: 80px;
+    width: 20%;
+    border: 1px solid black;
+}
+.change{
+    position: absolute;
+    left: 70%;
+    bottom: 5%;
+}
