@@ -5,17 +5,18 @@
 		<title>图书检索系统</title>
 		<link href="style.css" rel="stylesheet">
 	</head>
-	<body background="fangge.png">
+	<body background="./fangge.png">
 		<div class="main">
-		<div class="logo">
-			图书检索系统
-		</div>
-		
-		<div class="search">
-			<input type="text" id="key" name="key" placeholder="关键词" />
-			<input type="button" id="start" name="start" value="搜索" />
-		</div>
-		
+			<div class="logo">
+				<h1>图书检索系统</h1>
+			</div>
+			<div class="searchPlace">
+				
+					<input type="text" id="key" name="key" placeholder="关键词" class="search""/>
+					<input type="button" id="start" name="start" value="搜索" />
+				
+			</div>
+
 		<div class="placetable">
 			<table id="table">
 				<tr>
@@ -30,10 +31,19 @@
 			</table>
 		</div>
 		
-		<div class="change" >
-			<input type="button" id="prev" value="上一页" />	
-			<span id="pages"></span>
-			<input type="button" id="next" value="下一页" />
+		<div class="change">
+				<select name="selectNum" id="selectNum">
+					<option value="3">3</option>
+					<option selected value="4">4</option>
+					<option value="5">5</option>
+					<option value="6">6</option>
+					<option value="7">7</option>
+				</select>
+				</form>
+				<input type="button" id="prev" value="上一页" />	
+				<span id="pages"></span>
+				<input type="button" id="next" value="下一页" />
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		</div>
 	</div>
 		<script type="text/javascript">
@@ -51,22 +61,22 @@
 			];
 			
 			function searchByKeywords(keywords, searchArr) {
+				console.log('h')
 				const keywordsExp = new RegExp(".*?" + keywords + ".*?", "img");
 				return searchArr.filter(v => (keywordsExp.test(v.bname) || keywordsExp.test(v.sprice) ||keywordsExp.test(v.spbs) ||keywordsExp.test(v.sumber) || keywordsExp.test(v.keywd)));
 			}
 			var resultstring = JSON.stringify(searchByKeywords("", books));
 			var result = JSON.parse(resultstring)
 			
-			
-			var num1 = 4//每页设定为4本书
-			var num2//每页实际显示的书数量
+			var num1
+			var num2
 			var page = 1//默认为第一页
 			
 			//判断当前页码的书本数量
-			function changePages(result){
+			function changePages(result,num1){
 				var html = "";
-				if(result.length - num1 *(page - 1) >= 4){
-					num2 = 4;
+				if(result.length - num1 *(page - 1) >= num1){
+					num2 = num1;
 				}
 				else{
 					num2 = result.length - num1 *(page - 1);
@@ -80,6 +90,7 @@
 				 	html += "</tr>";
 				 }
 				 document.getElementById("emptybody").innerHTML = html;
+				 document.getElementById("pages").innerHTML = "当前第"+page+"页/总共"+Math.ceil(result.length/num1)+"页"
 			}
 			
 			
@@ -88,25 +99,35 @@
 					var schkey = document.getElementById("key").value;
 					var resultstring = JSON.stringify(searchByKeywords(schkey, books));
 					var result = JSON.parse(resultstring);
+					changeNum = document.getElementById("selectNum");
+						num1 = changeNum.value*1;
 					 prev.onclick = function () {
-            	if (page > 1) {
-	               	 page--;
-	              	 changePages(result);
-	            } else {
-	                alert('当前为第一页！')
-	        		 }
-        	}
-			  next.onclick = function () {
-		            if (page < Math.ceil(result.length/4)) {
-		                page++;
-		                changePages(result);
-		            } else {
-		                alert('当前为最后一页！')
-		            }
-        		}
-					changePages(result);
+						if (page > 1) {
+							page--;
+							changePages(result,num1);
+						} else {
+							alert('当前为第一页！')
+							}
+					}
+				 	 next.onclick = function () {
+						if (page < Math.ceil(result.length/num1)) {
+							page++;
+							changePages(result,num1);
+						} else {
+							alert('当前为最后一页！')
+							}
+        			}
+					changePages(result,num1);
+					changeNum.onclick = function(){
+					num1 = changeNum.value*1;
+					 changePages(result,num1);
 				}
-			}
+				}
+
+				
+					
+				}
+			
 			
 			
 		</script>
